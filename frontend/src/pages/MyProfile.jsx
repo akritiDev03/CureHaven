@@ -1,32 +1,56 @@
-import React, { useState } from 'react';
-import { assets } from '../assets/assets';
+import React, { useContext, useState } from 'react';
+import { AppContext } from '../context/AppContext';
+import {assets} from '../assets/assets'
 
 const MyProfile = () => {
-  const [userData, setUserData] = useState({
-    name: "Akriti",
-    image: assets.profile_pic,
-    email: "akriti@gmail.com",
-    phone: "1234567890",
-    address: {
-      line1: "D-1/240",
-      line2: "Sector-1, Noida"
-    },
-    gender: "Female",
-    dob: "1999-01-01"
-  });
+
+
+  const {userData,setUserData,token,backendUrl ,loadUserProfileData, } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false);
 
-  return (
-    <div className="max-w-lg w-full mx-auto flex flex-col gap-4 text-sm p-4 sm:p-6 bg-gray-100 shadow rounded-lg">
+  const[image,setImage] = useState(false)
+
+  const updateProfileData = async()=>{
       
+  }
+
+  return userData && (
+    <div className="max-w-lg w-full mx-auto flex flex-col gap-4 text-sm p-4 sm:p-6 bg-gray-100 shadow rounded-lg">
       {/* Profile Image */}
       <div className="flex flex-col items-center">
-        <img
-          src={userData.image}
-          alt="Profile"
-          className="w-28 sm:w-36 rounded-full object-cover"
-        />
+
+      {
+  isEdit ? (
+    <label htmlFor="image" className="cursor-pointer flex flex-col items-center">
+      <img
+        src={
+          image
+            ? URL.createObjectURL(image) // preview selected image
+            : userData.image
+            ? userData.image // existing image
+            : assets.profile_pic // fallback
+        }
+        alt="Profile"
+        className="w-28 sm:w-36 rounded-full object-cover border-2 border-dashed border-gray-400"
+      />
+      <p className="text-sm text-gray-500 mt-2">Click to change photo</p>
+      <input
+        onChange={(e) => setImage(e.target.files[0])}
+        type="file"
+        id="image"
+        hidden
+      />
+    </label>
+  ) : (
+    <img
+      src={userData.image || assets.profile_pic}
+      alt="Profile"
+      className="w-28 sm:w-36 rounded-full object-cover"
+    />
+  )
+}
+
         {isEdit ? (
           <input
             type="text"
