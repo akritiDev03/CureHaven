@@ -1,18 +1,23 @@
 import React, { useContext,useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import RelatedDoctors from '../components/RelatedDoctors'
+import { assets} from '../assets/assets'
+import {toast} from 'react-toastify'
+import axios from 'axios'
+
+
 
 const Appointment = () => {
 
   const {docId} =useParams()
-  const {doctors,currencySymbol} =useContext(AppContext)
+  const {doctors,currencySymbol,backendUrl, token, getDoctorsData} =useContext(AppContext)
   const daysOfWeek =['SUN','MON','TUE','WED','THU','FRI','SAT']
   const [docInfo,setDocInfo] =useState(null)
   const [docSlots,setDocSlots]=useState([])
   const [slotIndex,setSlotIndex] =useState(0)
   const [slotTime, setSlotTime] = useState('');
-
+  const navigate = useNavigate()
 
   const getAvailableSlots = async () => {
   setDocSlots([]);
@@ -52,6 +57,40 @@ const Appointment = () => {
     setDocSlots(prev =>([...prev, timeSlots]));
   }
 };
+
+    const bookAppointment = async() =>{
+      if(!token){
+         toast.warn('Login to book appointment')
+         return navigate('/login')
+      }
+
+      try {
+        const date = docSlots[slotIndex][0].datetime;
+        let day = date.getDate();
+        let month = date.getMonth() + 1; 
+        let year = date.getFullYear();
+
+        const slotDate = day +"_"+ month +"_"+ year;
+
+        const {data} = await axios.post(backendUrl + '/api/user/book-appointment',{docId, slotDate, slotTime},{headers:{token}})
+
+        if(data.success){
+          toast.success(data.message)
+          getDoctorsData()
+          navigate('/my-appointments')
+        }else{
+          toast.error(data.message)
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+      }
+
+
+
+    }
+
+
 
 
 useEffect(() => {
@@ -103,7 +142,7 @@ if (!docInfo) {
         </div>
        </div>
 
-{/*BOOKING SLOTS */}
+        {/*BOOKING SLOTS */}
         <div className='sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700'>
           <p>BOOKING SLOTS</p>
           <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4 '>
@@ -126,7 +165,7 @@ if (!docInfo) {
                 </p>
               ))}
             </div> 
-             <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Confirm Appointment </button> 
+             <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Confirm Appointment </button> 
         </div>
            {/* Listing Related Doctors */}
             <RelatedDoctors docId={docId} speciality={docInfo.speciality}  />

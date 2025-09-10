@@ -3,8 +3,6 @@ import {assets} from '../assets/assets'
 const About = () => {
   return (
     <div>
-
-
     <div className='text-center text-2xl md:text-3xl font-semibold pt-10 text-gray-600'>
       <p>ABOUT <span className='text-primary font-bold'>CUREHAVEN</span></p>
       </div>
@@ -14,17 +12,13 @@ const About = () => {
         <div className='flex flex-col justify-center gap-6 md:w-2/3 text-sm text-gray-600'>
         <p >CUREHAVEN Hospital is a multi/super speciality hospital located at the prime location of Vaishnodevi Circle, SG Road, Delhi; with state-of-the-art facilities & treatments at an affordable cost, encompassing wide spectrum of accurate diagnostics and elegant therapeutics created on the philosophical edifice of patient and ethical centricity ensuring humanistic dispensation.</p>
 
-
         <p> Our foundation rests on the philosophical edifice of patient and ethical centricity, ensuring every patient receives compassionate and humanistic care.</p>
-
 
         <p className='text-gray-800 font-medium'>"At CureHaven, we don't just treat diseases — we care for people. Every heartbeat here matters."</p>
 
         <p className='text-gray-800 font-semibold  text-right -mt-2' >- CEO Harshil Patel</p>
 
-
         </div>
-
       </div>
 
 

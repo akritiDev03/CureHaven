@@ -35,7 +35,7 @@ const AppContextProvider=(props)=>{
             if(data.success){
                 setUserData(data.userData)
             }else{
-                toast.error(error.message)
+                toast.error(data.message)
             }
         } catch (error) {
             console.log(error);
@@ -44,7 +44,7 @@ const AppContextProvider=(props)=>{
     }
 
     const val={
-       doctors,
+       doctors,getDoctorsData,
        currencySymbol,
        token,setToken,
        backendUrl,

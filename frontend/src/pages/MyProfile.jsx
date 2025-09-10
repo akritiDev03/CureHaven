@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import {assets} from '../assets/assets'
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const MyProfile = () => {
 
@@ -11,8 +13,33 @@ const MyProfile = () => {
 
   const[image,setImage] = useState(false)
 
-  const updateProfileData = async()=>{
-      
+  const updateUserProfileData = async()=>{
+      try {
+        const formData = new FormData();
+        formData.append('name', userData.name);
+        formData.append('phone', userData.phone);
+        formData.append('address',JSON.stringify(userData.address));
+        formData.append('gender', userData.gender);
+        formData.append('dob', userData.dob);
+
+        image && formData.append('image', image);
+        const { data } = await axios.post(backendUrl + '/api/user/update-profile', formData, {headers:{token}})
+
+        if(data.success){
+          toast.success(data.message)
+          await loadUserProfileData()
+          setIsEdit(false)
+          setImage(false)
+
+        }else{
+          toast.error(data.message)
+
+        }
+        
+      } catch (error) {
+         console.log(error)
+         toast.error(error.message)
+      }
   }
 
   return userData && (
@@ -32,7 +59,7 @@ const MyProfile = () => {
             : assets.profile_pic // fallback
         }
         alt="Profile"
-        className="w-28 sm:w-36 rounded-full object-cover border-2 border-dashed border-gray-400"
+        className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-dashed border-gray-400"
       />
       <p className="text-sm text-gray-500 mt-2">Click to change photo</p>
       <input
@@ -46,7 +73,7 @@ const MyProfile = () => {
     <img
       src={userData.image || assets.profile_pic}
       alt="Profile"
-      className="w-28 sm:w-36 rounded-full object-cover"
+      className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover"
     />
   )
 }
@@ -159,7 +186,13 @@ const MyProfile = () => {
           className={`w-full sm:w-auto px-6 py-2 rounded text-white font-medium transition-colors ${
             isEdit ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary-dark'
           }`}
-          onClick={() => setIsEdit(!isEdit)}
+          onClick={() => {
+          if (isEdit) {
+            updateUserProfileData(); // save when editing
+          } else {
+            setIsEdit(true); // switch to edit mode
+          }
+        }}
         >
           {isEdit ? 'Save Information' : 'Edit'}
         </button>
