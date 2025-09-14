@@ -49,10 +49,18 @@ const Doctors = () => {
 
                  <img className=' w-full h-48 object-cover transition-transform duration-500 hover:scale-110' src={item.image} alt=""/>
 
-                 <div className='p-4'>
-                    <div className='flex items-center gap-2 text-sm text-center text-green-600 '>
-                        <p className='w-2 h-2 bg-green-600 rounded-full'></p><p>Available</p>
-                     </div>
+                 <div className="p-4">
+                  <div className="flex items-center gap-2 text-sm text-center">
+                     <p
+                        className={`w-2 h-2 ${item.available ? 'bg-green-600' : 'bg-red-600'
+                           } rounded-full`}
+                     ></p>
+                     <p
+                        className={item.available ? 'text-green-600' : 'text-red-600'}
+                     >
+                        {item.available ? 'Available' : 'Not Available'}
+                     </p>
+                  </div>
                      <p className='text-gray-700 text-lg font-medium '>
                         {item.name}
                      </p>

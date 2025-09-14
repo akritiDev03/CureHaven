@@ -75,11 +75,34 @@ const MyAppointments = () => {
 
                 <div> </div>
 
-                <div className='flex flex-col gap-2 justify-end'>
-                  <button className='px-4 py-2 bg-primary hover:bg-blue-800 text-white rounded-lg text-sm font-medium'>Pay Online</button>
-                  <button onClick={()=>cancelAppointment(item._id)} className='px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium'>Cancel Appointment</button>
+                <div className="flex flex-col gap-2 justify-end">
+               {/* Show Pay & Cancel only if NOT completed */}
+               {!item.cancelled && !item.isCompleted && (
+                 <>
+                   <button className="px-4 py-2 bg-primary hover:bg-blue-800 text-white rounded-lg text-sm font-medium">
+                     Pay Online
+                   </button>
 
-                </div>
+                   <button
+                     onClick={() => cancelAppointment(item._id)}
+                     className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium"
+                   >
+                     Cancel Appointment
+                   </button>
+                 </>
+               )}
+
+               {item.cancelled ? (
+                 <button className="sm:min-w-48 py-2 border bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium">
+                   Cancelled
+                 </button>
+               ) : item.isCompleted ? (
+                 <button className="sm:min-w-48 py-2 border bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-medium">
+                   Completed
+                 </button>
+               ) : null}
+             </div>
+
              </div>
          ))}
       </div>
